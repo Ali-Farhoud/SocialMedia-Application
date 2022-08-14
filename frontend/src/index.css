@@ -1,0 +1,39 @@
+* {
+	margin: 0;
+	padding: 0;
+	font-family: 'Roboto', sans-serif;
+}
+.main-header {
+	background-color: rgb(41, 81, 212);
+	position: sticky;
+	top: 0;
+	z-index: 999;
+}
+.main-login {
+	background-color: rgb(237, 236, 236);
+}
+.container {
+	max-width: 90%;
+	margin: 0 auto;
+}
+
+@media (max-width: 1025px) {
+	.container {
+		max-width: 1140px;
+	}
+}
+@media (max-width: 992px) {
+	.container {
+		max-width: 960px;
+	}
+}
+@media (max-width: 768px) {
+	.container {
+		max-width: 720px;
+	}
+}
+@media (max-width: 576px) {
+	.container {
+		max-width: 100%;
+	}
+}

@@ -1,0 +1,10 @@
+.feed {
+	flex: 6.5;
+}
+.feedWrapper {
+	padding: 20px;
+}
+.loading {
+	margin-top: 35px;
+	font-weight: 500;
+}
