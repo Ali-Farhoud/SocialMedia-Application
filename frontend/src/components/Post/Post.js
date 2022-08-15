@@ -5,6 +5,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite'
 import CommentIcon from '@mui/icons-material/Comment'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 const Post = ({ post }) => {
 	const userLogin = useSelector((state) => state.userLogin)
 	const { userInfo } = userLogin
@@ -47,12 +48,14 @@ const Post = ({ post }) => {
 					<div className='postTopLeft'>
 						{user && (
 							<>
-								<img
-									src={user.profilePicture}
-									alt=''
-									className='postProfileImg'
-								/>
-								<span className='postName'>{user.username}</span>
+								<Link to={`/profile/${user.userId}`}>
+									<img
+										src={user.profilePicture}
+										alt=''
+										className='postProfileImg'
+									/>
+									<span className='postName'>{user.username}</span>
+								</Link>
 								<span className='postTime'>{post.createdAt}</span>
 							</>
 						)}

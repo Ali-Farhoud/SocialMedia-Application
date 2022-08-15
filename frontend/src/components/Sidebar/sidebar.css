@@ -67,3 +67,8 @@
 	display: block;
 	font-weight: 400;
 }
+@media (max-width: 850px) {
+	.sidebar {
+		display: none;
+	}
+}

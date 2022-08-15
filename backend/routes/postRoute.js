@@ -58,7 +58,9 @@ router.put('/:id/like', async (req, res) => {
 router.get('/timeline/:id', async (req, res) => {
 	try {
 		const currentUser = await User.findById(req.params.id)
-		const userPosts = await Post.find({ userId: currentUser._id })
+		const userPosts = await Post.find({ userId: currentUser._id }).sort({
+			createdAt: -1,
+		})
 		const friendPosts = await Promise.all(
 			currentUser.following.map((friendId) => {
 				return Post.find({ userId: friendId._id })
@@ -72,7 +74,7 @@ router.get('/timeline/:id', async (req, res) => {
 //get all posts
 router.get('/', async (req, res) => {
 	try {
-		const posts = await Post.find({})
+		const posts = await Post.find({}).sort({ createdAt: -1 })
 		if (posts) {
 			res.status(200).json(posts)
 		} else {

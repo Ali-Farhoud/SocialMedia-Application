@@ -89,14 +89,16 @@ const Rightbar = ({ profile, userId }) => {
 							{user && user.following.length > 0 ? (
 								user.following.map((user) => (
 									<div className='rightbarFollowing' key={user._id}>
-										<img
-											src={user.profilePicture}
-											alt=''
-											className='rightbarFollowingImg'
-										/>
-										<span className='rightbarFollowingName'>
-											{user.username}
-										</span>
+										<Link to={`/profile/${user._id}`}>
+											<img
+												src={user.profilePicture}
+												alt=''
+												className='rightbarFollowingImg'
+											/>
+											<span className='rightbarFollowingName'>
+												{user.username}
+											</span>
+										</Link>
 									</div>
 								))
 							) : (

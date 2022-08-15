@@ -7,6 +7,8 @@ const morgan = require('morgan')
 const userRoute = require('./routes/userRoute')
 const authRoute = require('./routes/authRoute')
 const postRoute = require('./routes/postRoute')
+const uploadRoute = require('./routes/uploadRoutes')
+const path = require('path')
 dotenv.config()
 mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true }, () => {
 	console.log('Connected to MongoDB')
@@ -24,6 +26,8 @@ app.get('/', (req, res) => {
 app.use('/api/users', userRoute)
 app.use('/api/auth', authRoute)
 app.use('/api/posts', postRoute)
+app.use('/api/upload', uploadRoute)
+app.use('/uploads', express.static(path.join(path.resolve(), '/uploads')))
 app.listen(8800, () => {
 	console.log('Backend Server is running...')
 })
