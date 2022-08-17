@@ -4,6 +4,7 @@ import Profile from './screens/profile/Profile'
 import Login from './screens/login/Login'
 import Register from './screens/register/Register'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import Messenger from './screens/messenger/Messenger'
 function App() {
 	return (
 		<Router>
@@ -19,6 +20,15 @@ function App() {
 				></Route>
 				<Route path='/signin' element={<Login />}></Route>
 				<Route path='/signup' element={<Register />}></Route>
+				<Route
+					path='/messenger'
+					element={
+						<>
+							<Header />
+							<Messenger />
+						</>
+					}
+				></Route>
 				<Route
 					path='/'
 					element={

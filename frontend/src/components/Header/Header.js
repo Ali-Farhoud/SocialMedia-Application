@@ -42,7 +42,9 @@ const Header = () => {
 						</div>
 						<div className='right-2'>
 							<div className='iconItem'>
-								<InboxIcon /> <span className='iconBadge'>1</span>
+								<Link to='/messenger'>
+									<InboxIcon /> <span className='iconBadge'>1</span>
+								</Link>
 							</div>
 							<div className='iconItem'>
 								<PersonIcon /> <span className='iconBadge'>1</span>

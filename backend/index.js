@@ -8,6 +8,8 @@ const userRoute = require('./routes/userRoute')
 const authRoute = require('./routes/authRoute')
 const postRoute = require('./routes/postRoute')
 const uploadRoute = require('./routes/uploadRoutes')
+const conversationRoute = require('./routes/conversationRoute')
+const messageRoute = require('./routes/messageRoute')
 const path = require('path')
 dotenv.config()
 mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true }, () => {
@@ -17,7 +19,7 @@ mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true }, () => {
 //middleware
 app.use(express.json())
 app.use(helmet())
-app.use(morgan('common'))
+app.use(morgan('dev'))
 
 //api routes
 app.get('/', (req, res) => {
@@ -27,6 +29,8 @@ app.use('/api/users', userRoute)
 app.use('/api/auth', authRoute)
 app.use('/api/posts', postRoute)
 app.use('/api/upload', uploadRoute)
+app.use('/api/conversations', conversationRoute)
+app.use('/api/messages', messageRoute)
 app.use('/uploads', express.static(path.join(path.resolve(), '/uploads')))
 app.listen(8800, () => {
 	console.log('Backend Server is running...')

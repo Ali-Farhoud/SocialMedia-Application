@@ -1,0 +1,81 @@
+.messenger {
+	height: calc(100vh - 60px);
+	display: flex;
+}
+.chatMenu {
+	flex: 3.5;
+}
+.chatBox {
+	flex: 5.5;
+}
+.chatOnline {
+	flex: 3;
+}
+.chatMenuWrapper,
+.chatBoxWrapper {
+	padding: 20px;
+
+	height: 100%;
+}
+.chatOnlineWrapper {
+	padding-top: 20px;
+	overflow-y: auto;
+}
+.chatMenuInput {
+	width: 90%;
+	padding: 10px;
+	border: none;
+	border-bottom: 1px solid grey;
+}
+.chatMenuInput:focus {
+	outline: none;
+}
+.chatBoxBottom {
+	display: flex;
+	margin-top: 5px;
+	align-items: center;
+	justify-content: space-between;
+}
+.chatBoxInput {
+	width: 80%;
+	min-height: 90px;
+	padding: 10px;
+	border-radius: 10px;
+}
+.chatBoxSend {
+	padding: 15px 20px;
+	border: none;
+	border-radius: 10px;
+	background-color: rgb(33, 148, 33);
+	color: white;
+	cursor: pointer;
+}
+.chatBoxWrapper {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+.chatBoxTop {
+	overflow-y: scroll;
+	margin-bottom: 10px;
+	padding-right: 10px;
+
+	height: 100%;
+}
+.chatOnlineP {
+	margin-bottom: 20px;
+	border-bottom: 1px solid #000;
+	padding-bottom: 5px;
+}
+.chatMenuWrapper {
+	overflow-y: scroll;
+}
+.chatOnlineBox {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.startConvoIcon {
+	margin-right: 10px;
+	cursor: pointer;
+}

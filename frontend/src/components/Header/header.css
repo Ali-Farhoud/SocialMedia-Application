@@ -72,6 +72,9 @@
 .right-2 {
 	display: flex;
 }
+.right-2 a {
+	color: white;
+}
 .iconItem {
 	margin-right: 15px;
 	cursor: pointer;
