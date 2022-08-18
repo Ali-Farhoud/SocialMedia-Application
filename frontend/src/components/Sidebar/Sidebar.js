@@ -1,6 +1,5 @@
 import './sidebar.css'
 import React, { useEffect, useState } from 'react'
-
 import RssFeedIcon from '@mui/icons-material/RssFeed'
 import ChatIcon from '@mui/icons-material/Chat'
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo'
@@ -9,26 +8,28 @@ import BookmarkIcon from '@mui/icons-material/Bookmark'
 import HelpIcon from '@mui/icons-material/Help'
 import WorkIcon from '@mui/icons-material/Work'
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { getAllUsers } from '../../actions/userActions'
 
-const Sidebar = () => {
-	const userLogin = useSelector((state) => state.userLogin)
-	const { userInfo } = userLogin
-
+const Sidebar = ({ loggedInUser }) => {
+	// dipatch and selector for working with redux store
+	const dispatch = useDispatch()
 	const allUsers = useSelector((state) => state.allUsers)
 	const { users } = allUsers
+	// useState hook for componenet level state
 	const [suggestedList, setSuggestedList] = useState([])
-
+	// useEffect hook is run when componenet is first rendered or when a value in the dependency array changes
 	useEffect(() => {
-		if (userInfo && users) {
-			const followingId = userInfo.following.map((u) => u._id)
-
+		if (loggedInUser && users) {
+			const followingId = loggedInUser.following.map((u) => u._id)
 			const suggested = users.filter(
-				(u) => u._id !== userInfo._id && !followingId.includes(u._id)
+				(u) => u._id !== loggedInUser._id && !followingId.includes(u._id)
 			)
 			setSuggestedList(suggested)
+		} else {
+			dispatch(getAllUsers())
 		}
-	}, [userInfo, users])
+	}, [loggedInUser, dispatch, users])
 
 	return (
 		<div className='sidebar'>

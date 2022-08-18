@@ -5,17 +5,23 @@ import { login } from '../../actions/userActions'
 import { Link, useNavigate } from 'react-router-dom'
 
 const Login = () => {
+	// use state hook for component level state
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
-	const dispatch = useDispatch()
+	// use navigate to switch to another url
 	const navigate = useNavigate()
+	// use dispatch and selector to work with redux
+	const dispatch = useDispatch()
 	const userLogin = useSelector((state) => state.userLogin)
 	const { userInfo } = userLogin
+	// useEffect hook runs when componenet renders and when values in the second parameter change
 	useEffect(() => {
 		if (userInfo) {
 			navigate('/')
 		}
-	})
+	}, [userInfo, navigate])
+
+	// custom login handler that dispatches an action
 	const loginHandler = () => {
 		dispatch(login(email, password))
 	}

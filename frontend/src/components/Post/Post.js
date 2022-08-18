@@ -4,43 +4,50 @@ import MoreVertIcon from '@mui/icons-material/MoreVert'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import CommentIcon from '@mui/icons-material/Comment'
 import axios from 'axios'
-import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
-const Post = ({ post }) => {
-	const userLogin = useSelector((state) => state.userLogin)
-	const { userInfo } = userLogin
-	const userId = post.userId
+const Post = ({ post, loggedInUser }) => {
+	//useState for component-level state
 	const [user, setUser] = useState(null)
 	const [likes, setLikes] = useState(post.likes.length)
 	const [isLiked, setIsLiked] = useState(
-		userInfo && post.likes.includes(userInfo._id)
+		loggedInUser && post.likes.includes(loggedInUser._id)
 	)
-
+	// handle like action by user
 	const likeHandler = async () => {
-		if (userInfo) {
+		if (loggedInUser) {
 			if (!isLiked) {
-				await axios.put(`/api/posts/${post._id}/like`, { userId: userInfo._id })
+				await axios.put(`/api/posts/${post._id}/like`, {
+					userId: loggedInUser._id,
+				})
 				setLikes(likes + 1)
 				setIsLiked(true)
 			} else {
-				await axios.put(`/api/posts/${post._id}/like`, { userId: userInfo._id })
+				await axios.put(`/api/posts/${post._id}/like`, {
+					userId: loggedInUser._id,
+				})
 				setLikes(likes - 1)
 				setIsLiked(false)
 			}
 		}
 	}
-
+	// useEffect hook runs when component renders or value in dependency array changes
 	useEffect(() => {
-		const getUser = async (userId) => {
-			try {
-				const { data } = await axios.get(`/api/users/${userId}`)
-				setUser(data)
-			} catch (err) {
-				console.log(err)
+		if (post) {
+			const getUser = async (userId) => {
+				try {
+					const { data } = await axios.get(`/api/users/${userId}`)
+					setUser(data)
+				} catch (err) {
+					console.log(err)
+				}
+			}
+			if (post.userId === loggedInUser._id) {
+				setUser(loggedInUser)
+			} else {
+				getUser(post.userId)
 			}
 		}
-		getUser(userId)
-	}, [userId])
+	}, [post, loggedInUser])
 	return (
 		<div className='post'>
 			<div className='postWrapper'>

@@ -4,15 +4,16 @@ import PermMediaIcon from '@mui/icons-material/PermMedia'
 import RoomIcon from '@mui/icons-material/Room'
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions'
 import LabelIcon from '@mui/icons-material/Label'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import axios from 'axios'
 import { loadPosts } from '../../actions/postActions'
-const Share = () => {
-	const userLogin = useSelector((state) => state.userLogin)
-	const { loading, userInfo } = userLogin
+const Share = ({ loggedInUser }) => {
+	// useState hook for componenet level state
 	const [description, setDescription] = useState('')
 	const [file, setFile] = useState(null)
 	const dispatch = useDispatch()
+
+	// upload photo file to backend
 	const uploadFileHandler = async (e) => {
 		const file = e.target.files[0]
 		const formData = new FormData()
@@ -29,39 +30,36 @@ const Share = () => {
 			console.log(error)
 		}
 	}
+	// submit handler to create post
 	const submitHandler = async (e) => {
 		e.preventDefault()
 		const post = {
-			userId: userInfo._id,
+			userId: loggedInUser._id,
 			description,
 			image: file,
 		}
 		await axios.post('/api/posts', post)
-		dispatch(loadPosts(userInfo._id))
+		dispatch(loadPosts(loggedInUser._id))
 		setDescription('')
 	}
 	return (
 		<div className='share'>
 			<div className='shareWrapper'>
 				<div className='shareTop'>
-					{loading ? (
-						<h1>loading...</h1>
-					) : userInfo ? (
+					{loggedInUser && (
 						<>
 							<img
-								src={userInfo.profilePicture}
+								src={loggedInUser.profilePicture}
 								alt=''
 								className='shareProfileImg'
 							/>
 							<input
-								placeholder={`What's on your mind, ${userInfo.username}?`}
+								placeholder={`What's on your mind, ${loggedInUser.username}?`}
 								className='shareInput'
 								value={description}
 								onChange={(e) => setDescription(e.target.value)}
 							/>
 						</>
-					) : (
-						<h1>no user logged in</h1>
 					)}
 				</div>
 				<hr className='shareHr' />

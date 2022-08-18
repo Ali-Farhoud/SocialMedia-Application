@@ -5,34 +5,42 @@ import Feed from '../../components/Feed/Feed'
 import Rightbar from '../../components/Rightbar/Rightbar'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import { getAllUsers, updateUser } from '../../actions/userActions'
+import { updateUser } from '../../actions/userActions'
 import axios from 'axios'
 const Profile = () => {
+	// useSelector to retrieve state from redux store
 	const userLogin = useSelector((state) => state.userLogin)
 	const { loading, error, userInfo } = userLogin
-	const allUsers = useSelector((state) => state.allUsers)
-	const { users } = allUsers
+
+	// navigate to other urls
 	const navigate = useNavigate()
+	//dispatch for redux use
 	const dispatch = useDispatch()
+	// useParams hook to access parameters in the url
 	const params = useParams()
+	//useState for componenet level state
 	const [otherUser, setOtherUser] = useState(null)
 	const [following, setFollowing] = useState([])
+
+	// useEffect is run when componenet is first rendered and when the values in the dependecy array are changed
 	useEffect(() => {
 		if (!userInfo) {
 			navigate('/signin')
-		} else if (userInfo._id !== params.id) {
-			getOtherUser(params.id)
-			const followingList = userInfo.following.map((u) => u._id)
-			setFollowing(followingList)
+		} else {
+			if (userInfo._id !== params.id) {
+				getOtherUser(params.id)
+				const followingList = userInfo.following.map((u) => u._id)
+				setFollowing(followingList)
+			}
 		}
-		if (users && users.length === 0) {
-			dispatch(getAllUsers())
-		}
-	}, [userInfo, navigate, dispatch, users, params.id])
+	}, [userInfo, navigate, params.id])
+
+	// if the profile is not the logged in user's profile, then get information of that user
 	const getOtherUser = async (id) => {
 		const { data } = await axios.get(`/api/users/${id}`)
 		setOtherUser(data)
 	}
+	// hit api endpoint to follow user
 	const followHandler = async (id, myId) => {
 		try {
 			await axios.put(`/api/users/${id}/follow`, { userId: myId })
@@ -41,6 +49,7 @@ const Profile = () => {
 			console.log(error)
 		}
 	}
+	// hit api endpoint to unfollow user
 	const unfollowHandler = async (id, myId) => {
 		try {
 			await axios.put(`/api/users/${id}/unfollow`, { userId: myId })
@@ -59,7 +68,7 @@ const Profile = () => {
 						<h4>{error}</h4>
 					) : userInfo ? (
 						<>
-							<Sidebar />
+							<Sidebar loggedInUser={userInfo} />
 							{userInfo._id === params.id ? (
 								<div className='profileRight'>
 									<div className='profileRightTop'>
@@ -81,8 +90,16 @@ const Profile = () => {
 										</div>
 									</div>
 									<div className='profileRightBottom'>
-										<Feed profile userId={userInfo._id} />
-										<Rightbar profile userId={userInfo._id} />
+										<Feed
+											profile
+											userId={userInfo._id}
+											loggedInUser={userInfo}
+										/>
+										<Rightbar
+											profile
+											userId={userInfo._id}
+											loggedInUser={userInfo}
+										/>
 									</div>
 								</div>
 							) : otherUser ? (
@@ -103,7 +120,7 @@ const Profile = () => {
 										<div className='profileInfo'>
 											<h4 className='profileName'>{otherUser.username}</h4>
 											<span className='profileInfoDesc'>Hi Friends</span>
-											{following.includes(otherUser._id) ? (
+											{following?.includes(otherUser._id) ? (
 												<button
 													onClick={() => {
 														unfollowHandler(otherUser._id, userInfo._id)
@@ -125,8 +142,12 @@ const Profile = () => {
 										</div>
 									</div>
 									<div className='profileRightBottom'>
-										<Feed profile userId={params.id} />
-										<Rightbar profile userId={params.id} />
+										<Feed profile userId={params.id} loggedInUser={userInfo} />
+										<Rightbar
+											profile
+											userId={params.id}
+											loggedInUser={userInfo}
+										/>
 									</div>
 								</div>
 							) : (

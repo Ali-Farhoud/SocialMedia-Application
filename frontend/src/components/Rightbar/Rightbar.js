@@ -1,19 +1,24 @@
 import './rightbar.css'
 import React, { useEffect, useState } from 'react'
 import CakeIcon from '@mui/icons-material/Cake'
-
-import { useSelector } from 'react-redux'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-const Rightbar = ({ profile, userId }) => {
-	const userLogin = useSelector((state) => state.userLogin)
-	const { userInfo } = userLogin
+
+const Rightbar = ({ profile, userId, loggedInUser }) => {
+	// useState for component level state
 	const [user, setUser] = useState(null)
+
+	//useEffect Hook runs when componenet renders or values in the dependency array change
 	useEffect(() => {
 		if (profile) {
-			getUser(userId)
+			if (userId !== loggedInUser._id) {
+				getUser(userId)
+			} else {
+				setUser(loggedInUser)
+			}
 		}
-	}, [profile, userId])
+	}, [profile, userId, loggedInUser])
+	// get info of user with id parameter
 	const getUser = async (id) => {
 		const { data } = await axios.get(`/api/users/${id}`)
 		setUser(data)
@@ -34,8 +39,8 @@ const Rightbar = ({ profile, userId }) => {
 						<h4 className='rightbarTitle'>Online Friends</h4>
 						<hr className='rightbarHr' />
 						<ul className='rightbarFriendList'>
-							{userInfo && userInfo.following.length > 0 ? (
-								userInfo.following.map((user) => (
+							{loggedInUser && loggedInUser.following.length > 0 ? (
+								loggedInUser.following.map((user) => (
 									<li className='rightbarFriend' key={user._id}>
 										<div className='rightbarProfileImgContainer'>
 											<Link to={`/profile/${user._id}`}>
@@ -61,15 +66,15 @@ const Rightbar = ({ profile, userId }) => {
 						<div className='rightbarInfo'>
 							<div className='rightbarInfoItem'>
 								<span className='rightbarInfoKey'>City:</span>
-								<span className='rightbarInfoValue'>Ottawa</span>
+								<span className='rightbarInfoValue'>{user.city}</span>
 							</div>
 							<div className='rightbarInfoItem'>
 								<span className='rightbarInfoKey'>From:</span>
-								<span className='rightbarInfoValue'>Palestine</span>
+								<span className='rightbarInfoValue'>{user.from}</span>
 							</div>
 							<div className='rightbarInfoItem'>
 								<span className='rightbarInfoKey'>Relationship:</span>
-								<span className='rightbarInfoValue'>Single</span>
+								<span className='rightbarInfoValue'>{user.relationship}</span>
 							</div>
 							<div className='rightbarInfoItem'>
 								<span className='rightbarInfoKey'>Following:</span>

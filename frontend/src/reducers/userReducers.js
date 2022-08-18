@@ -14,7 +14,7 @@ export const userLoginReducer = (state = {}, action) => {
 			return state
 	}
 }
-export const allUsersReducer = (state = { users: [] }, action) => {
+export const allUsersReducer = (state = {}, action) => {
 	switch (action.type) {
 		case 'USER_ALL_REQUEST':
 			return { loading: true }

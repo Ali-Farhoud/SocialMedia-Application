@@ -1,26 +1,27 @@
+import './homepage.css'
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import './homepage.css'
 import Sidebar from '../../components/Sidebar/Sidebar'
 import Feed from '../../components/Feed/Feed'
 import Rightbar from '../../components/Rightbar/Rightbar'
-import { getAllUsers } from '../../actions/userActions'
+
 const HomePage = () => {
+	// useNavigate hook to navigate to a different path
 	const navigate = useNavigate()
+	// useDispatch hook to work with redux
 	const dispatch = useDispatch()
+	// useSelector hook retrieves universal state from redux store
 	const userLogin = useSelector((state) => state.userLogin)
 	const { loading, error, userInfo } = userLogin
-	const allUsers = useSelector((state) => state.allUsers)
-	const { users } = allUsers
+
+	// useEffect hook is run when component is rendered and when values in the dependency array change
 	useEffect(() => {
+		// check for logged in user
 		if (!userInfo) {
 			navigate('/signin')
 		}
-		if (users && users.length === 0) {
-			dispatch(getAllUsers())
-		}
-	}, [navigate, userInfo, dispatch, users])
+	}, [navigate, userInfo, dispatch])
 	return (
 		<>
 			<div className='container'>
@@ -31,9 +32,9 @@ const HomePage = () => {
 						<h2>{error}</h2>
 					) : (
 						<>
-							<Sidebar />
-							<Feed />
-							<Rightbar />
+							<Sidebar loggedInUser={userInfo} />
+							<Feed loggedInUser={userInfo} />
+							<Rightbar loggedInUser={userInfo} />
 						</>
 					)}
 				</div>

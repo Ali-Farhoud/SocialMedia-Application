@@ -4,21 +4,28 @@ import { Link, useNavigate } from 'react-router-dom'
 import { signup } from '../../actions/userActions'
 
 const Register = () => {
+	// useState hook for component level state
 	const [username, setUsername] = useState('')
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [confirmPassword, setConfirmPassword] = useState('')
+	//dipsatch to work with redux actions
 	const dispatch = useDispatch()
+	//use selector to retrieve state from redux store
 	const userSignup = useSelector((state) => state.userSignup)
 	const { success } = userSignup
+	// navigate to different route
 	const navigate = useNavigate()
 
+	//useEffect hook runs when page is first rendered or when values in the dependency array change
 	useEffect(() => {
 		if (success) {
 			alert('User registered successfuly ')
 			navigate('/signin')
 		}
 	}, [success, navigate])
+
+	// custom signup handler to ensure user have entered valid data
 	const signupHandler = (user) => {
 		if (user.username.length < 3) {
 			alert('You name should be more than 3 charachters')

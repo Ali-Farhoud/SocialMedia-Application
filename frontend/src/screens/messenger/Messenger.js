@@ -11,56 +11,80 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { io } from 'socket.io-client'
 const Messenger = () => {
+	//dipatch redux actions
 	const dispatch = useDispatch()
+	// useSelector to retrieve state from redux store
 	const userLogin = useSelector((state) => state.userLogin)
 	const { userInfo } = userLogin
 	const loadedConversations = useSelector((state) => state.loadedConversations)
 	const { conversations } = loadedConversations
+	const loadedMessages = useSelector((state) => state.loadedMessages)
+	const { messages } = loadedMessages
+	// useState for componenet level state
 	const [currentConversation, setCurrentConversation] = useState(null)
 	const [currentConversationMembers, setCurrentConversationMembers] = useState(
 		[]
 	)
-	const loadedMessages = useSelector((state) => state.loadedMessages)
-	const { messages } = loadedMessages
+	const [currentConversationMessages, setCurrentConversationMessages] =
+		useState(messages)
 	const [message, setMessage] = useState('')
 	const [arrivingMessage, setArrivingMessage] = useState(null)
 	const [socket, setSocket] = useState(null)
+	// useRef hook to controll scrolling of chat
 	const scrollRef = useRef()
+	// navigate to different route
 	const navigate = useNavigate()
 
+	// useEffect to handle if user is logged in
+	useEffect(() => {
+		if (!userInfo) {
+			navigate('/signin')
+		}
+	}, [userInfo, navigate])
+	useEffect(() => {
+		setCurrentConversationMessages(messages)
+	}, [messages])
+	// useEffect to connect to web socket on first render of this component
 	useEffect(() => {
 		setSocket(io('ws://localhost:8900'))
 	}, [])
+	// handle getMessage Action from web socket
 	useEffect(() => {
 		socket?.on('getMessage', (data) => {
 			setArrivingMessage({
+				_id: `${data.senderId}+${Date.now()}`,
 				sender: data.senderId,
 				text: data.text,
-				createdAt: Date.now(),
 			})
 		})
 	}, [socket])
+	// if there is an arriving message from the user in my current chat
 	useEffect(() => {
 		arrivingMessage &&
 			currentConversationMembers.includes(arrivingMessage.sender) &&
-			dispatch(loadMessages(currentConversation))
-	}, [arrivingMessage])
+			setCurrentConversationMessages((prev) => [...prev, arrivingMessage])
+	}, [arrivingMessage, currentConversationMembers, dispatch])
+	// send user info to websocket
 	useEffect(() => {
 		socket?.emit('addUser', userInfo._id)
 		socket?.on('users', (users) => {
 			console.log(users)
 		})
 	}, [userInfo, socket])
+	// main useEffect
 	useEffect(() => {
 		if (userInfo) {
 			dispatch(loadConversations(userInfo._id))
 		} else {
 			navigate('/signin')
 		}
+	}, [dispatch, userInfo, navigate])
+	useEffect(() => {
 		if (currentConversation) {
 			dispatch(loadMessages(currentConversation))
 		}
-	}, [dispatch, userInfo, currentConversation, navigate])
+	}, [currentConversation, dispatch])
+	// create new conversation by hitting api endpoint
 	const startConversation = async (recieverId, senderId) => {
 		try {
 			const newConversation = { senderId, recieverId }
@@ -71,6 +95,7 @@ const Messenger = () => {
 			setCurrentConversationMembers(members)
 		} catch (error) {}
 	}
+	// create new message by hitting api endpoint
 	const sendMessage = async () => {
 		const newMessage = {
 			conversationId: currentConversation,
@@ -83,16 +108,17 @@ const Messenger = () => {
 			text: message,
 		})
 		try {
-			await axios.post('/api/messages', newMessage)
+			const { data } = await axios.post('/api/messages', newMessage)
 			setMessage('')
-			dispatch(loadMessages(currentConversation))
+			setCurrentConversationMessages([...currentConversationMessages, data])
 		} catch (error) {
 			console.log(error)
 		}
 	}
+	// scroll to view last message sent
 	useEffect(() => {
 		scrollRef.current?.scrollIntoView()
-	}, [messages])
+	}, [currentConversationMessages])
 	return (
 		<div className='messenger'>
 			<div className='chatMenu'>
@@ -125,8 +151,8 @@ const Messenger = () => {
 			<div className='chatBox'>
 				<div className='chatBoxWrapper'>
 					<div className='chatBoxTop'>
-						{currentConversation && messages ? (
-							messages.map((m) =>
+						{currentConversation && currentConversationMessages ? (
+							currentConversationMessages.map((m) =>
 								m.sender === String(userInfo._id) ? (
 									<div ref={scrollRef} key={m._id}>
 										<Message own text={m.text} time={m.createdAt} />

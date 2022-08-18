@@ -8,9 +8,13 @@ import { Link } from 'react-router-dom'
 import { logout } from '../../actions/userActions'
 import { useDispatch, useSelector } from 'react-redux'
 const Header = () => {
+	// useSelectore hook to retrieve state from redux store
 	const userLogin = useSelector((state) => state.userLogin)
 	const { userInfo } = userLogin
+	//useDispatch hook to work with redux actions
 	const dispatch = useDispatch()
+
+	// handler to dispatch logout action
 	const logoutHandler = () => {
 		dispatch(logout())
 	}

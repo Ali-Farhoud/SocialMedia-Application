@@ -65,12 +65,11 @@
 	font-weight: 500;
 	margin-right: 20px;
 	cursor: pointer;
+	margin-left: auto;
+	margin-top: 10px;
 }
 @media (max-width: 550px) {
 	.shareOptions {
 		display: none;
-	}
-	.shareButton {
-		margin-left: auto;
 	}
 }
