@@ -3,13 +3,13 @@
 In this project, I created a full stack social media application that is a facebook clone.
 The application is fully functional as the user is able to :
  
-1 - Create an account and sign in with valid creditionals to enter website
-2 - Browse for users with an account on this platform
-3 - Follow and unfollow users
-4 - View homepage timeline that displays followed users' posts
-5 - Post text and images for followers to see
-6 - Like and dislike users' posts
-7 - Real time messaging and chat with friends
+- Create an account and sign in with valid creditionals to enter website
+- Browse for users with an account on this platform
+- Follow and unfollow users
+- View homepage timeline that displays followed users' posts
+- Post text and images for followers to see
+- Like and dislike users' posts
+- Real time messaging and chat with friends
 
 # Technology Used
 
